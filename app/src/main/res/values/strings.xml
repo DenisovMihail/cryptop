@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Cryptop Screener</string>
+    <string name="OK">ОК</string>
+    <string name="Cancel">Отмена</string>
+    <string name="action_search">Поиск</string>
+    <string name="action_settings">Настройки</string>
+    <string name="action_show_allcoins">Все активы</string>
+    <string name="action_show_stablecoins">Только стейблкойны</string>
+    <string name="action_show_not_stablecoins">Все кроме стейблкойнов</string>
+    <string name="NoNetwork">Отсустствует подключение к интернету, работа приложения невозможна</string>
+    <string name="InitializingCoinmarketcap">"Инициализируем Coinmarketcap"</string>
+    <string name="title_activity_settings">Настройки</string>
+
+    <!-- Preference Titles -->
+    <string name="api_keys_header">Ключи API</string>
+    <string name="view_options_header">Вид</string>
+    <string name="sync_header">Синхронизация</string>
+
+    <!-- Messages Preferences -->
+    <string name="cmc_api_key_title">Coinmarketcap.com</string>
+    <string name="chart_type_title">Вид графика</string>
+    <string name="chart_tf_title">Таймфрейм</string>
+    <string name="chart_bar_count_title">Количество баров/точек</string>
+    <string name="signature_title">Подпись</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+</resources>

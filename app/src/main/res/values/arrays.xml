@@ -1,0 +1,46 @@
+<resources>
+    <!-- Chart Type Preference -->
+    <string-array name="chart_type_entries">
+        <item>Линейный</item>
+        <item>Японские свечи</item>
+    </string-array>
+    <string-array name="chart_type_values">
+        <item>line</item>
+        <item>candle</item>
+    </string-array>
+    <string-array name="chart_tf_entries">
+        <!--<item>1 минута</item>-->
+        <!--<item>3 минуты</item>-->
+        <item>5 минут</item>
+        <item>15 минут</item>
+        <item>30 минут</item>
+        <item>1 час</item>
+        <item>2 часа</item>
+        <item>4 часа</item>
+        <item>6 часов</item>
+        <item>8 часов</item>
+        <item>12 часов</item>
+        <item>1 день</item>
+        <item>3 дня</item>
+        <item>1 неделя</item>
+        <item>1 месяц</item>
+    </string-array>
+    <string-array name="chart_tf_values">
+        <!--<item>1m</item>-->
+        <!--<item>3m</item>-->
+        <item>5m</item>
+        <item>15m</item>
+        <item>30m</item>
+        <item>1h</item>
+        <item>2h</item>
+        <item>4h</item>
+        <item>6h</item>
+        <item>8h</item>
+        <item>12h</item>
+        <item>1d</item>
+        <item>3d</item>
+        <item>1w</item>
+        <item>1M</item>
+    </string-array>
+
+</resources>

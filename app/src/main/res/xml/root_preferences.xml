@@ -1,0 +1,62 @@
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="@string/api_keys_header">
+
+        <EditTextPreference
+            app:key="cmc_api_key"
+            app:title="@string/cmc_api_key_title"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/view_options_header">
+
+        <ListPreference
+            app:defaultValue="line"
+            app:entries="@array/chart_type_entries"
+            app:entryValues="@array/chart_type_values"
+            app:key="chart_type"
+            app:title="@string/chart_type_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="4h"
+            app:entries="@array/chart_tf_entries"
+            app:entryValues="@array/chart_tf_values"
+            app:key="chart_tf"
+            app:title="@string/chart_tf_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <SeekBarPreference
+            app:title="@string/chart_bar_count_title"
+            app:defaultValue="30"
+            app:min="10"
+            app:seekBarIncrement="1"
+            android:max="90"
+            app:key="chart_bar_count"
+            app:adjustable="true"
+            app:isPreferenceVisible="true"
+            app:showSeekBarValue="true"/>
+
+    </PreferenceCategory>
+
+    <!--
+        <PreferenceCategory app:title="@string/sync_header">
+
+            <SwitchPreferenceCompat
+                app:key="sync"
+                app:title="@string/sync_title" />
+
+            <SwitchPreferenceCompat
+                app:dependency="sync"
+                app:key="attachment"
+                app:summaryOff="@string/attachment_summary_off"
+                app:summaryOn="@string/attachment_summary_on"
+                app:title="@string/attachment_title" />
+
+        </PreferenceCategory>
+    -->
+    
+</PreferenceScreen>
