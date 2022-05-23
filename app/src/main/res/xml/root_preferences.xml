@@ -40,9 +40,19 @@
             app:isPreferenceVisible="true"
             app:showSeekBarValue="true"/>
 
+    <!-- загадочный баг-->
+        <ListPreference
+            app:defaultValue="USDT"
+            app:entries="@array/quote_symbol_values"
+            app:entryValues="@array/quote_symbol_values"
+            app:key="quote_symbol"
+            app:title="@string/quote_symbol"
+            app:useSimpleSummaryProvider="true" />
+
+
     </PreferenceCategory>
 
-    <!--
+    <!-- оставлено для примера dependency
         <PreferenceCategory app:title="@string/sync_header">
 
             <SwitchPreferenceCompat

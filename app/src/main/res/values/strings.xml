@@ -13,14 +13,15 @@
 
     <!-- Preference Titles -->
     <string name="api_keys_header">Ключи API</string>
-    <string name="view_options_header">Вид</string>
+    <string name="view_options_header">График котировок</string>
     <string name="sync_header">Синхронизация</string>
 
     <!-- Messages Preferences -->
-    <string name="cmc_api_key_title">Coinmarketcap.com</string>
+    <string name="cmc_api_key_title">coinmarketcap.com/api</string>
     <string name="chart_type_title">Вид графика</string>
     <string name="chart_tf_title">Таймфрейм</string>
     <string name="chart_bar_count_title">Количество баров/точек</string>
+    <string name="quote_symbol">Обменная единица</string>
     <string name="signature_title">Подпись</string>
 
     <!-- Sync Preferences -->

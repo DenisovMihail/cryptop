@@ -12,9 +12,7 @@ public class BinCandles {
     public static BinCandles FromJson(String json) {
         Gson gson = new Gson();
         try {
-            Type type = new TypeToken<BinCandle[]>() {
-            }.getType();
-            BinCandle[] bin = gson.fromJson(json, type);
+            BinCandle[] bin = gson.fromJson(json, BinCandle[].class);
             BinCandles b = new BinCandles();
             b.data = bin;
             return b;

@@ -1,9 +1,6 @@
 package com.gxdcd.cryptop.api.cmc;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-
-import androidx.preference.PreferenceManager;
 
 import com.gxdcd.cryptop.api.Action;
 import com.gxdcd.cryptop.api.ApiUtils;
@@ -16,28 +13,45 @@ public class CmcProvider {
     // Обозначение валюты котрировки по умолчанию
     // USD в принципе является значением по умолчанию,
     // хотя в документации это не отражено
-    public static String defaultQuoteSymbol = "USDT";
+    private static String defaultQuoteSymbol = "USDT";
 
-    private static ApiUtils.Watcher watcher;
+    public static String getDefaultQuoteSymbol() {
+        return defaultQuoteSymbol;
+    }
+
+    private static ApiUtils.Watcher cmc_api_key_watcher;
+    private static ApiUtils.Watcher quote_symbol_watcher;
 
     final static String cmc_api_key = "cmc_api_key";
+    final static String quote_symbol = "quote_symbol";
 
     public static Integer getCmcPageSize() {
         return 100;
     }
 
+    public static void hookQuoteSymbolChange(Context context, Action<String> changed)
+    {
+        if (quote_symbol_watcher == null) {
+            quote_symbol_watcher = new ApiUtils.Watcher(quote_symbol, q -> {
+                defaultQuoteSymbol = ApiUtils.getPreferenceValue(context, quote_symbol, defaultQuoteSymbol);
+                changed.execute(defaultQuoteSymbol);
+            });
+            ApiUtils.registerWatcher(context, quote_symbol_watcher);
+        }
+    }
+
     public static void onApiKeyReady(Context context, Action<String> ready, Action<String> missing) {
-        String cmc_key = ApiUtils.getPreferenceValue(context, cmc_api_key, "");
         // Watcher используется для отслеживания изменения настроек
         // экземпляр необходимо сохранить как статическое поле или
         // любую другую внешнюю переменную чтоб спрятать его от уборки и уничтожения
         // - сохраняем как статическое поле данного класса
-        if (watcher == null) {
-            watcher = new ApiUtils.Watcher(cmc_api_key, ready);
-            ApiUtils.registerWatcher(context, watcher);
+        if (cmc_api_key_watcher == null) {
+            cmc_api_key_watcher = new ApiUtils.Watcher(cmc_api_key, ready);
+            ApiUtils.registerWatcher(context, cmc_api_key_watcher);
         }
+        String cmc_key = ApiUtils.getPreferenceValue(context, cmc_api_key, "");
         if (cmc_key != null && !"".equals(cmc_key)) {
-            ready.execute(cmc_key);
+            ready.execute(cmc_key); // = start(api_key)
         } else {
             missing.execute("Введите ключ API в настройках");
         }

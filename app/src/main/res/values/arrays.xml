@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Chart Type Preference -->
     <string-array name="chart_type_entries">
@@ -7,6 +8,12 @@
     <string-array name="chart_type_values">
         <item>line</item>
         <item>candle</item>
+    </string-array>
+    <string-array name="quote_symbol_values">
+        <item>USDT</item>
+        <item>USD</item>
+        <item>RUB</item>
+        <item>BTC</item>
     </string-array>
     <string-array name="chart_tf_entries">
         <!--<item>1 минута</item>-->

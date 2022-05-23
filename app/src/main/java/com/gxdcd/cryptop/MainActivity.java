@@ -13,10 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.gxdcd.cryptop.api.Action;
 import com.gxdcd.cryptop.api.ApiUtils;
+import com.gxdcd.cryptop.api.binance.BinInterval;
 import com.gxdcd.cryptop.api.cmc.CmcProvider;
 import com.gxdcd.cryptop.utils.EndlessRecyclerViewScrollListener;
-import com.gxdcd.cryptop.utils.Helper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,27 +31,36 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (Helper.networkIsNotAvailable(this))
+        if (!ApiUtils.networkIsNotAvailable(this))
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            String message = this.getResources().getString(R.string.NoNetwork);
+            builder.setMessage(message);
+            builder.setPositiveButton(this.getResources().getString(R.string.OK), null);
+            builder.create().show();
             return;
+        }
         setup();
         Toast.makeText(this, this.getResources().getString(
                 R.string.InitializingCoinmarketcap), Toast.LENGTH_SHORT).show();
         startWithApiKey();
+        CmcProvider.hookQuoteSymbolChange(this.getApplicationContext(), s -> startWithApiKey());
     }
 
     private void startWithApiKey() {
-        CmcProvider.onApiKeyReady(this.getApplicationContext(), api_key -> {
-            start(api_key);
-        }, error -> {
-            // ключ API не настроен так как отсутствует, или возникла
-            // другая ошибка при работе с сохраненными настройками
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setMessage(error);
-            builder.setPositiveButton("OK", null);
-            builder.setOnDismissListener(dialog->startActivity(
-                    new Intent(MainActivity.this, SettingsActivity.class)));
-            builder.create().show();
-        });
+        CmcProvider.onApiKeyReady(
+                this.getApplicationContext(),
+                api_key -> start(api_key),
+                error -> {
+                    // ключ API не настроен так как отсутствует, или возникла
+                    // другая ошибка при работе с сохраненными настройками
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setMessage(error);
+                    builder.setPositiveButton("OK", null);
+                    builder.setOnDismissListener(dialog -> startActivity(
+                        new Intent(MainActivity.this, SettingsActivity.class)));
+                    builder.create().show();
+                });
     }
 
     private void start(String api_key) {
@@ -156,18 +166,24 @@ public class MainActivity extends AppCompatActivity {
             optionsMenu.findItem(R.id.action_show_stablecoins).setChecked(false);
             optionsMenu.findItem(R.id.action_show_not_stablecoins).setChecked(false);
             adapter.setCoinVisibility(CoinVisibility.ALL);
+            ApiUtils.setPreferenceValue(
+                    this.getApplicationContext(),"coin_visibility","ALL");
             return true;
         } else if (id == R.id.action_show_stablecoins) {
             item.setChecked(true);
             optionsMenu.findItem(R.id.action_show_allcoins).setChecked(false);
             optionsMenu.findItem(R.id.action_show_not_stablecoins).setChecked(false);
             adapter.setCoinVisibility(CoinVisibility.STABLECOINS);
+            ApiUtils.setPreferenceValue(
+                    this.getApplicationContext(),"coin_visibility","STABLECOINS");
             return true;
         } else if (id == R.id.action_show_not_stablecoins) {
             item.setChecked(true);
             optionsMenu.findItem(R.id.action_show_allcoins).setChecked(false);
             optionsMenu.findItem(R.id.action_show_stablecoins).setChecked(false);
             adapter.setCoinVisibility(CoinVisibility.NO_STABLECOINS);
+            ApiUtils.setPreferenceValue(
+                    this.getApplicationContext(),"coin_visibility","NO_STABLECOINS");
             return true;
         }
 
@@ -184,6 +200,29 @@ public class MainActivity extends AppCompatActivity {
         final MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(adapter);
+        String coin_visibility = ApiUtils.getPreferenceValue(
+                this.getApplicationContext(),"coin_visibility","ALL");
+
+        switch (coin_visibility) {
+            case "ALL":
+                optionsMenu.findItem(R.id.action_show_allcoins).setChecked(true);
+                optionsMenu.findItem(R.id.action_show_stablecoins).setChecked(false);
+                optionsMenu.findItem(R.id.action_show_not_stablecoins).setChecked(false);
+                adapter.setCoinVisibility(CoinVisibility.ALL);
+                break;
+            case "STABLECOINS":
+                optionsMenu.findItem(R.id.action_show_allcoins).setChecked(false);
+                optionsMenu.findItem(R.id.action_show_stablecoins).setChecked(true);
+                optionsMenu.findItem(R.id.action_show_not_stablecoins).setChecked(false);
+                adapter.setCoinVisibility(CoinVisibility.STABLECOINS);
+                break;
+            case "NO_STABLECOINS":
+                optionsMenu.findItem(R.id.action_show_allcoins).setChecked(false);
+                optionsMenu.findItem(R.id.action_show_stablecoins).setChecked(false);
+                optionsMenu.findItem(R.id.action_show_not_stablecoins).setChecked(true);
+                adapter.setCoinVisibility(CoinVisibility.NO_STABLECOINS);
+                break;
+        }
 
         return true;
     }

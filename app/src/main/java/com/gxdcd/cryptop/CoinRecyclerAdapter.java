@@ -91,6 +91,8 @@ class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.ViewH
 
     @NonNull
     private List<CmcItem> getFilteredItems() {
+        if (CmcProvider.Latest.data == null)
+            return this.items;
         final List<CmcItem> filtered = new ArrayList<>();
         for (CmcItem item : CmcProvider.Latest.data) {
             if (coinVisibility.willShow(item)) {

@@ -33,6 +33,10 @@ public enum BinInterval {
         return intervalId;
     }
 
+    public String translate() {
+        return getIntervalId();
+    }
+
     public static BinInterval from(String intervalId) {
         switch (intervalId) {
             case "1m": return BinInterval.ONE_MINUTE;

@@ -47,7 +47,7 @@ class CmcLatestTask extends AsyncTask<Integer, Void, CmcLatest> {
                             .appendQueryParameter("limit", limit.toString())
                             // Параметр "convert" позволяет при необходимости
                             // получать несколько котировок за один вызов.
-                            .appendQueryParameter("convert", CmcProvider.defaultQuoteSymbol)
+                            .appendQueryParameter("convert", CmcProvider.getDefaultQuoteSymbol())
             );
 
             try {

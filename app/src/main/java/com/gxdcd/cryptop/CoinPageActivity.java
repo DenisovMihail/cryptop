@@ -174,7 +174,7 @@ public class CoinPageActivity extends AppCompatActivity {
             // отключаем текст легенды и включаем описание на графике
             lineChart.getLegend().setEnabled(false);
             lineChart.getDescription().setEnabled(true);
-            lineChart.getDescription().setText(pair);
+            lineChart.getDescription().setText(pair + ":" + interval.translate());
 
             // масштабирование и перетаскивание
             // отдельно по x- и y- осям
@@ -201,8 +201,6 @@ public class CoinPageActivity extends AppCompatActivity {
                 xAxis.enableGridDashedLine(10f, 10f, 0f);
                 yAxis.enableGridDashedLine(10f, 10f, 0f);
             }
-            ;
-
         }
 
         /*
@@ -256,7 +254,7 @@ public class CoinPageActivity extends AppCompatActivity {
             // отключаем текст легенды и включаем описание на графике
             candleChart.getLegend().setEnabled(false);
             candleChart.getDescription().setEnabled(true);
-            candleChart.getDescription().setText(pair);
+            candleChart.getDescription().setText(pair + ":" + interval.translate());
 
             // if more than 60 entries are displayed in the chart, no values will be
             // drawn
@@ -435,11 +433,21 @@ public class CoinPageActivity extends AppCompatActivity {
 
 // обеспечиваем форматирование метки оси X в виде даты
 class XAxisValueFormatter extends ValueFormatter {
-    static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM");
+    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM");
     BinInterval interval;
 
     public XAxisValueFormatter(BinInterval interval) {
         this.interval = interval;
+        if (interval.getSeconds() < BinInterval.HOURLY.getSeconds()) {
+            // часы:минуты
+            sdf = new SimpleDateFormat("hh:mm");
+        } else if (interval.getSeconds() < BinInterval.DAILY.getSeconds()) {
+            // часы:минуты
+            sdf = new SimpleDateFormat("hh:mm");
+        } else {
+            // дни.месяцы
+            sdf = new SimpleDateFormat("dd.MM");
+        }
     }
 
     @Override

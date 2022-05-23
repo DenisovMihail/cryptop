@@ -1,9 +1,10 @@
 package com.gxdcd.cryptop.api.cmc;
 
-import java.io.Serializable;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 // Класс для описания данных получаемых от API
 // coinmarketcap, необходимых для работы приложения
@@ -108,12 +109,16 @@ public class CmcItem /* implements Serializable */ {
 
     // Котировка криптовалюты по отношению к заданной валюте по умолчанию
     public CmcQuote getQuote() {
-        return quote.get(CmcProvider.defaultQuoteSymbol);
+        Map.Entry<String,CmcQuote> entry = quote.entrySet().iterator().next();
+        String key = entry.getKey();
+        CmcQuote value = entry.getValue();
+        return value;
+//        return quote.get(CmcProvider.getDefaultQuoteSymbol());
     }
 
     // Котировка криптовалюты по отношению к заданной валюте по умолчанию
     public String getQuoteSymbol() {
-        return CmcProvider.defaultQuoteSymbol;
+        return CmcProvider.getDefaultQuoteSymbol();
     }
 
     public boolean isStablecoin() {
