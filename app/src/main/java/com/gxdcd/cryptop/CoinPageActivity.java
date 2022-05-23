@@ -137,6 +137,12 @@ public class CoinPageActivity extends AppCompatActivity {
         SetupLineChart(pair, interval, useLineChart);
         SetupCandleChart(pair, interval, !useLineChart);
 
+        if (item.symbol.equals("USDT")){
+            Toast.makeText(this,
+                    "График для данной пары отсутствует", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Toast.makeText(this,
                 String.format("Загружаем данные %s%s", item.symbol, "USDT"), Toast.LENGTH_SHORT).show();
         BinanceProvider.Load(
@@ -147,6 +153,10 @@ public class CoinPageActivity extends AppCompatActivity {
                                 String.format("Данные %s%s загружены", item.symbol, "USDT"), Toast.LENGTH_SHORT).show();
                         FillLineChart(candles, pair, interval, useLineChart);
                         FillCandleChart(candles, pair, interval, !useLineChart, this.night);
+                    } else {
+                        Toast.makeText(this,
+                                String.format("График для пары %s%s отсутствует",
+                                        item.symbol, "USDT"), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

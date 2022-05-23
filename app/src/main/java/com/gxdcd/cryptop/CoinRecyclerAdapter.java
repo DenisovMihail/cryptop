@@ -48,7 +48,7 @@ class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.ViewH
     // Обновление данных визуального списка.
     // Вызывается после получения данных от сервера
     void UpdateFromCmcProvider() {
-        this.items = getFilteredItems();
+        items = getFilteredItems();
         notifyDataSetChanged();
     }
 
@@ -76,7 +76,7 @@ class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.ViewH
      * suggestions if available, true if the action was handled by the listener.
      */
     @Override
-    public boolean onQueryTextChange(String query) {
+    public boolean onQueryTextChange(@NonNull String query) {
         this.filter = query.toLowerCase();
         this.items = getFilteredItems();
         notifyDataSetChanged();

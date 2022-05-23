@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.gxdcd.cryptop.api.Action;
 import com.gxdcd.cryptop.api.ApiUtils;
-import com.gxdcd.cryptop.api.binance.BinInterval;
 import com.gxdcd.cryptop.api.cmc.CmcProvider;
 import com.gxdcd.cryptop.utils.EndlessRecyclerViewScrollListener;
 
@@ -43,8 +41,12 @@ public class MainActivity extends AppCompatActivity {
         setup();
         Toast.makeText(this, this.getResources().getString(
                 R.string.InitializingCoinmarketcap), Toast.LENGTH_SHORT).show();
+        CmcProvider.onQuoteSymbolChange(
+                this.getApplicationContext(), s -> {
+                    // выполнить обновление списка
+                    startWithApiKey();
+                });
         startWithApiKey();
-        CmcProvider.hookQuoteSymbolChange(this.getApplicationContext(), s -> startWithApiKey());
     }
 
     private void startWithApiKey() {
@@ -79,11 +81,11 @@ public class MainActivity extends AppCompatActivity {
                         builder.setPositiveButton("OK", null);
                         builder.create().show();
                     } else {
+                        // запускаем обновление адаптера от полученных данных
+                        adapter.UpdateFromCmcProvider();
                         // отображаем сообщение о завершении загрузки
                         Toast.makeText(MainActivity.this,
                                 "Данные Coinmarketcap загружены", Toast.LENGTH_SHORT).show();
-                        // запускаем обновление адаптера от полученных данных
-                        adapter.UpdateFromCmcProvider();
                     }
                 });
     }

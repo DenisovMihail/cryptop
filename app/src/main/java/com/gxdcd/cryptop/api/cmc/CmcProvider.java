@@ -1,7 +1,9 @@
 package com.gxdcd.cryptop.api.cmc;
 
 import android.content.Context;
+import android.widget.Toast;
 
+import com.gxdcd.cryptop.R;
 import com.gxdcd.cryptop.api.Action;
 import com.gxdcd.cryptop.api.ApiUtils;
 
@@ -29,18 +31,18 @@ public class CmcProvider {
         return 100;
     }
 
-    public static void hookQuoteSymbolChange(Context context, Action<String> changed)
+    public static void onQuoteSymbolChange(Context context, Action<String> changed)
     {
         if (quote_symbol_watcher == null) {
-            quote_symbol_watcher = new ApiUtils.Watcher(quote_symbol, q -> {
-                defaultQuoteSymbol = ApiUtils.getPreferenceValue(context, quote_symbol, defaultQuoteSymbol);
-                changed.execute(defaultQuoteSymbol);
+            quote_symbol_watcher = new ApiUtils.Watcher(quote_symbol, symbol -> {
+                changed.execute(defaultQuoteSymbol = symbol);
             });
             ApiUtils.registerWatcher(context, quote_symbol_watcher);
         }
     }
 
     public static void onApiKeyReady(Context context, Action<String> ready, Action<String> missing) {
+        defaultQuoteSymbol = ApiUtils.getPreferenceValue(context, quote_symbol, defaultQuoteSymbol);
         // Watcher используется для отслеживания изменения настроек
         // экземпляр необходимо сохранить как статическое поле или
         // любую другую внешнюю переменную чтоб спрятать его от уборки и уничтожения
