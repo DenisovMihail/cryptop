@@ -37,7 +37,7 @@ class CmcLatestTask extends AsyncTask<Integer, Void, CmcLatest> {
             // Создаем соединение с сервером
             HttpURLConnection connection = CmcUtils.CreateConnection(
                     apiKey,
-                    // https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=2&limit=2&convert=USD
+                    // https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=2&limit=2&convert=USDT
                     CmcUtils.CreateUriBuilder("v1")
                             .appendPath("cryptocurrency")
                             .appendPath("listings")
@@ -70,19 +70,15 @@ class CmcLatestTask extends AsyncTask<Integer, Void, CmcLatest> {
                 } else
                     // Если сервер вернул код ошибки, создаем
                     // объект CmcLatest содержащий код ошибки
-                    // Однако, помимо кода ошибки, вервер может (должен) вернуть
-                    // её описание - его также можно использовать для детализации
+                    // Однако, помимо кода ошибки, вервер должен вернуть её описание
                     return CmcLatest.FromError("Сервер вернул код ошибки: " + responseCode);
             } finally {
                 // Гарантированно закрываем соединение с сервером
                 connection.disconnect();
             }
 
-        } catch (MalformedURLException e) {
-            // В случае исключения возвращаем CmcLatest содержащий информацию об ошибке
-            return CmcLatest.FromError(e);
         } catch (IOException e) {
-            // то же самое
+            // В случае исключения возвращаем CmcLatest содержащий информацию об ошибке
             return CmcLatest.FromError(e);
         }
     }
