@@ -87,11 +87,8 @@ class CmcMetadataTask extends AsyncTask<CmcLatest, Void, CmcMetadata> {
                 connection.disconnect();
             }
 
-        } catch (MalformedURLException e) {
-            // В случае исключения возвращаем CmcMetadata содержащий информацию об ошибке
-            return CmcMetadata.FromError(e);
         } catch (IOException e) {
-            // то же самое
+            // В случае исключения возвращаем CmcMetadata содержащий информацию об ошибке
             return CmcMetadata.FromError(e);
         }
     }
