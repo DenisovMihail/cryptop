@@ -54,8 +54,6 @@ class BinUtils {
 
     // Преобразуем потоковые данные от сервера в строку json
     static String ConvertStreamToJson(InputStream stream) {
-        // https://stackoverflow.com/questions/6829801/httpurlconnection-setconnecttimeout-has-no-effect
-        // можно использовать что-то похожее с [StringBuilder answer] но код со сканнером короче и проще
         Scanner scanner = new Scanner(stream, "UTF-8").useDelimiter("\\A");
         return scanner.hasNext() ? scanner.next() : "";
     }
@@ -66,7 +64,6 @@ class BinUtils {
 // через предоставленный объект CmcProvider.Action<CmcLatest>
 class BinKlinesTask extends AsyncTask<BinParams, Void, BinCandles> {
 
-    // сохраняем код, предоставленный вызывающей стороной
     Action<BinCandles> finished;
 
     BinKlinesTask(Action<BinCandles> finished) {
@@ -74,15 +71,9 @@ class BinKlinesTask extends AsyncTask<BinParams, Void, BinCandles> {
         this.finished = finished;
     }
 
-    // Запуск фоновой асинхронной задачи получения данных списка криптовалют
-    // Оформлено в виде отдельного метода для упрощения StartCmcCombinedFetchTask
-    static void Start(BinParams params, Action<BinCandles> finished) {
-        new BinKlinesTask(finished).execute(params);
-    }
-
     static BinCandles GetKlines(BinParams params) {
         try {
-            // Создаем соединение с сервером
+            // Соединение с сервером
             HttpURLConnection connection = BinUtils.CreateConnection(
                     BinUtils.CreateUriBuilder("klines")
                             .appendQueryParameter("symbol", params.symbol)
@@ -91,10 +82,10 @@ class BinKlinesTask extends AsyncTask<BinParams, Void, BinCandles> {
             );
 
             try {
-                // Выполняем запрос к серверу
+                // Запрос к серверу
                 int responseCode = connection.getResponseCode();
-                // Логируем код ответа сервера - если вызов завершен
-                // корректно, получаем responseCode HTTP_OK 200
+
+                // если вызов завершен корректно, получаем responseCode HTTP_OK 200
                 Log.i(BinUtils.TAG, "Сервер ответил кодом: " + responseCode);
 
                 // В случае корректного выполнения запроса,
@@ -110,19 +101,15 @@ class BinKlinesTask extends AsyncTask<BinParams, Void, BinCandles> {
                 } else
                     // Если сервер вернул код ошибки, создаем
                     // объект CmcLatest содержащий код ошибки
-                    // Однако, помимо кода ошибки, вервер может (должен) вернуть
-                    // её описание - его также можно использовать для детализации
+                    // Однако, помимо кода ошибки, сервер должен вернуть её описание
                     return BinCandles.FromError("Сервер вернул код ошибки: " + responseCode);
             } finally {
                 // Гарантированно закрываем соединение с сервером
                 connection.disconnect();
             }
 
-        } catch (MalformedURLException e) {
-            // В случае исключения возвращаем CmcLatest содержащий информацию об ошибке
-            return BinCandles.FromError(e);
         } catch (IOException e) {
-            // то же самое
+            // В случае исключения возвращаем CmcLatest содержащий информацию об ошибке
             return BinCandles.FromError(e);
         }
     }
