@@ -54,7 +54,7 @@ import java.util.Date;
 
 public class CoinPageActivity extends AppCompatActivity {
 
-    boolean night;
+    private boolean night;
 
     void setText(@IdRes int id, String format, Object... args) {
         TextView view = findViewById(id);
@@ -467,7 +467,6 @@ class XAxisValueFormatter extends ValueFormatter {
         ).longValue());
         return sdf.format(d);
     }
-    // другие переопределения не вызываются кодом и не используются
 }
 
 
