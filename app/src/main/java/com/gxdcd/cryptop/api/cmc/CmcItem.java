@@ -16,13 +16,8 @@ public class CmcItem /* implements Serializable */ {
 
     @Override
     public String toString() {
-        // важное переопределение - используется для
-        // упрощения построения списка идентификаторов
+        // для упрощения построения списка идентификаторов
         // в методе CmcProvider.GetMetadata
-        /*
-            static CmcMetadata GetMetadata(List<CmcItem> list) {
-                String ids = TextUtils.join(",", list);
-        */
         return id.toString();
     }
 
@@ -70,11 +65,6 @@ public class CmcItem /* implements Serializable */ {
         }
     */
 
-    // Используем только необходимые данные
-    // Так как поля данных java-класса и поля данных json-объекта
-    // соответствуют по наименованию и типу данных, никаких
-    // атрибутов для преобразования через библиотеку gson не требуется
-
     // "id": 1, - уникальный идентификатор coinmarketcap
     public Integer id;
 
@@ -95,25 +85,17 @@ public class CmcItem /* implements Serializable */ {
     // "cmc_rank": 1, - ранг криптовалюты в рейтинге
     public Integer cmc_rank;
 
-    // список тэгов может в дальнейшем использоваться
-    // для классификации криптовалют в перечне
-    // может содержать тэги mineable для добаваемых криптовалют
-    // или например stablecoin для стабильных критповалют привязанных
-    // например, к американскому доллару
+    // список тэгов
     public List<String> tags;
 
     // Котировка криптовалюты по отнощению к заданной валюте
-    // Данное поле десериализуется из json, полученного
-    // от API но не используется напрямую
     private Hashtable<String, CmcQuote> quote;
 
     // Котировка криптовалюты по отношению к заданной валюте по умолчанию
     public CmcQuote getQuote() {
         Map.Entry<String,CmcQuote> entry = quote.entrySet().iterator().next();
-        String key = entry.getKey();
         CmcQuote value = entry.getValue();
         return value;
-//        return quote.get(CmcProvider.getDefaultQuoteSymbol());
     }
 
     // Котировка криптовалюты по отношению к заданной валюте по умолчанию
