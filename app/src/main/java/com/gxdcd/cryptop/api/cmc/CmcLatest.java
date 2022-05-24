@@ -181,7 +181,7 @@ public class CmcLatest {
         return status != null ? status.error_message : "";
     }
 
-    // Десериализуем объект из json-данных
+    // Объект из json-данных
     public static CmcLatest FromJson(String json) {
         Gson gson = new Gson();
         try {
@@ -194,7 +194,7 @@ public class CmcLatest {
             // Всё ок - возвращаем воссозданный объект
             return obj;
         } catch (JsonParseException e) {
-            // В случае ошибки при десериализации - возвращаем объект созданный из ошибки
+            // В случае ошибки возвращаем объект созданный из ошибки
             return FromError(e);
         }
     }
