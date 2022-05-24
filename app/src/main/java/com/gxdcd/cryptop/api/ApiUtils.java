@@ -14,8 +14,6 @@ import java.util.Scanner;
 public class ApiUtils {
 
     // если интернет отсутствует, работа приложения невозможна
-    // желательно в дальнейшем добавить пользователю страницу
-    // или элемент управления на данный случай
     public static boolean networkIsNotAvailable(Activity activity) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -65,8 +63,6 @@ public class ApiUtils {
 
     // Преобразуем потоковые данные от сервера в строку json
     public static String ConvertStreamToJson(InputStream stream) {
-        // https://stackoverflow.com/questions/6829801/httpurlconnection-setconnecttimeout-has-no-effect
-        // можно использовать что-то похожее с [StringBuilder answer] но код со сканнером короче и проще
         Scanner scanner = new Scanner(stream, "UTF-8").useDelimiter("\\A");
         return scanner.hasNext() ? scanner.next() : "";
     }
