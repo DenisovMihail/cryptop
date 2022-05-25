@@ -28,11 +28,6 @@ class CmcUtils {
         connection.setConnectTimeout(TIMEOUT_VALUE);
         connection.setReadTimeout(TIMEOUT_VALUE);
         // не используем заголовки HTTP для установки ключа API
-        /*
-        GET /v1/cryptocurrency/listings/latest?start=1&limit=2&convert=USD HTTP/1.1
-        Host: https://pro-api.coinmarketcap.com
-        X-CMC_PRO_API_KEY: efcbfb84-36dc-4da5-9d5e-7ff7ef800ff7
-        */
         // connection.addRequestProperty("X-CMC_PRO_API_KEY", apiKey);
         Log.i(TAG, "Строка запроса к серверу: " + connection.getURL());
         return connection;
