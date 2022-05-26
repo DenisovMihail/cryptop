@@ -1,15 +1,16 @@
 package com.gxdcd.cryptop;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -20,22 +21,28 @@ import com.gxdcd.cryptop.api.cmc.CmcProvider;
 import com.gxdcd.cryptop.api.cmc.CmcQuote;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 // Пример работы с RecyclerView
 // https://guides.codepath.com/android/Using-the-RecyclerView
 
-class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.ViewHolder> implements SearchView.OnQueryTextListener {
+class CoinRecyclerAdapter
+        extends RecyclerView.Adapter<CoinRecyclerAdapter.ViewHolder>
+        implements SearchView.OnQueryTextListener {
 
     private Context context;
     private List<CmcItem> items = new ArrayList<>();
     private ItemClickListener clickListener;
     private CoinVisibility coinVisibility = CoinVisibility.ALL;
     private String filter;
+    private SharedPreferences sharedPreferences;
 
     public CoinRecyclerAdapter(Context context, ItemClickListener itemClickListener) {
         this.context = context;
         this.clickListener = itemClickListener;
+        this.sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     // Обновление данных визуального списка.
@@ -95,7 +102,7 @@ class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.ViewH
             return this.items;
         final List<CmcItem> filtered = new ArrayList<>();
         for (CmcItem item : CmcProvider.Latest.data) {
-            if (coinVisibility.willShow(item)) {
+            if (coinVisibility.willShow(item, i -> this.getIsFavorite(i))) {
                 if (this.filter == null || this.filter == "")
                     filtered.add(item);
                 else {
@@ -149,6 +156,26 @@ class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.ViewH
         // запоминаем id для восстановления
         holder.id = item.id;
 
+        if (getIsFavorite(item.id)){
+            holder.fav.setImageResource(R.drawable.btn_star_big_on);
+        } else {
+            holder.fav.setImageResource(R.drawable.btn_star_big_off);
+        }
+
+        holder.fav.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                if (getIsFavorite(item.id)){
+                    setFavorite(item.id, false);
+                    holder.fav.setImageResource(R.drawable.btn_star_big_off);
+                } else {
+                    setFavorite(item.id, true);
+                    holder.fav.setImageResource(R.drawable.btn_star_big_on);
+                }
+                CoinRecyclerAdapter.this.items = getFilteredItems();
+                notifyDataSetChanged();
+            }
+        });
+
         Glide.with(context)
                 .load(meta.logo)
                 .override(64, 64)
@@ -164,10 +191,25 @@ class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.ViewH
         holder.textView7d.setText(String.format("7д: %.2f", quote.percentChange7d) + "%");
     }
 
-
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    boolean getIsFavorite(Integer id) {
+        return sharedPreferences.getBoolean("favorite-" + id, false);
+    }
+
+    void setFavorite(Integer id, boolean value){
+        if (getIsFavorite(id)){
+            if (!value){
+                sharedPreferences.edit().putBoolean("favorite-" + id, false).apply();
+            }
+        } else {
+            if (value){
+                sharedPreferences.edit().putBoolean("favorite-" + id, true).apply();
+            }
+        }
     }
 
     // Provide a direct reference to each of the views within a data item
@@ -184,6 +226,7 @@ class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.ViewH
         TextView textView24h;
         TextView textView7d;
         ImageView logo;
+        ImageView fav;
         Integer id;
 
         // We also create a constructor that accepts the entire item row
@@ -192,6 +235,7 @@ class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.ViewH
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
+            fav = itemView.findViewById(R.id.fav);
             logo = itemView.findViewById(R.id.logo);
             name = itemView.findViewById(R.id.name);
             price = itemView.findViewById(R.id.price);
