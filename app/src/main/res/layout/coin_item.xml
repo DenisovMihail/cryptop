@@ -32,7 +32,7 @@
 
             <TextView
                 android:id="@+id/name"
-                android:layout_width="fill_parent"
+                android:layout_width="281dp"
                 android:layout_height="wrap_content"
                 android:padding="6dip"
                 android:singleLine="true"
@@ -40,11 +40,24 @@
                 android:textAppearance="@android:style/TextAppearance.Medium"
                 android:textColor="#004d40" />
 
+            <ImageView
+                android:id="@+id/fav"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:maxWidth="32dip"
+                android:maxHeight="32dip"
+                android:minWidth="32dip"
+                android:minHeight="32dip"
+                android:paddingLeft="0dip"
+                android:paddingTop="6dip"
+                android:paddingRight="6dip"
+                android:paddingBottom="6dip" />
+
         </LinearLayout>
 
         <TextView
             android:id="@+id/price"
-            android:layout_width="fill_parent"
+            android:layout_width="311dp"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:text="price"
@@ -52,7 +65,7 @@
 
         <TextView
             android:id="@+id/marketCap"
-            android:layout_width="fill_parent"
+            android:layout_width="310dp"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:text="marketCap"
@@ -60,7 +73,7 @@
 
         <TextView
             android:id="@+id/volume24h"
-            android:layout_width="fill_parent"
+            android:layout_width="310dp"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:text="volume24h"
