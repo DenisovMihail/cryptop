@@ -7,6 +7,7 @@
     <string name="action_show_allcoins">Все активы</string>
     <string name="action_show_stablecoins">Только стейблкойны</string>
     <string name="action_show_not_stablecoins">Все кроме стейблкойнов</string>
+    <string name="action_show_favorite_coins">Избранные</string>
     <string name="NoNetwork">Отсустствует подключение к интернету, работа приложения невозможна</string>
     <string name="InitializingCoinmarketcap">"Инициализируем Coinmarketcap"</string>
     <string name="title_activity_settings">Настройки</string>
