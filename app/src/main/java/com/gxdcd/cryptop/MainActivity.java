@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchTimelineAsync(/*int offset*/) {
+    private void fetchTimelineAsync() {
         Toast.makeText(MainActivity.this,
                 "Обновление данных", Toast.LENGTH_SHORT).show();
         startWithApiKey();
@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
             item.setChecked(true);
             optionsMenu.findItem(R.id.action_show_stablecoins).setChecked(false);
             optionsMenu.findItem(R.id.action_show_not_stablecoins).setChecked(false);
+            optionsMenu.findItem(R.id.action_show_favorite_coins).setChecked(false);
             adapter.setCoinVisibility(CoinVisibility.ALL);
             ApiUtils.setPreferenceValue(
                     this.getApplicationContext(),"coin_visibility","ALL");
@@ -175,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
             item.setChecked(true);
             optionsMenu.findItem(R.id.action_show_allcoins).setChecked(false);
             optionsMenu.findItem(R.id.action_show_not_stablecoins).setChecked(false);
+            optionsMenu.findItem(R.id.action_show_favorite_coins).setChecked(false);
             adapter.setCoinVisibility(CoinVisibility.STABLECOINS);
             ApiUtils.setPreferenceValue(
                     this.getApplicationContext(),"coin_visibility","STABLECOINS");
@@ -183,9 +185,19 @@ public class MainActivity extends AppCompatActivity {
             item.setChecked(true);
             optionsMenu.findItem(R.id.action_show_allcoins).setChecked(false);
             optionsMenu.findItem(R.id.action_show_stablecoins).setChecked(false);
+            optionsMenu.findItem(R.id.action_show_favorite_coins).setChecked(false);
             adapter.setCoinVisibility(CoinVisibility.NO_STABLECOINS);
             ApiUtils.setPreferenceValue(
                     this.getApplicationContext(),"coin_visibility","NO_STABLECOINS");
+            return true;
+        } else if (id == R.id.action_show_favorite_coins) {
+            item.setChecked(true);
+            optionsMenu.findItem(R.id.action_show_allcoins).setChecked(false);
+            optionsMenu.findItem(R.id.action_show_stablecoins).setChecked(false);
+            optionsMenu.findItem(R.id.action_show_not_stablecoins).setChecked(false);
+            adapter.setCoinVisibility(CoinVisibility.FAVORITES);
+            ApiUtils.setPreferenceValue(
+                    this.getApplicationContext(),"coin_visibility","FAVORITES");
             return true;
         }
 
@@ -193,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // после создания меню
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         optionsMenu = menu;
@@ -202,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
         final MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(adapter);
+
         String coin_visibility = ApiUtils.getPreferenceValue(
                 this.getApplicationContext(),"coin_visibility","ALL");
 
@@ -210,19 +224,29 @@ public class MainActivity extends AppCompatActivity {
                 optionsMenu.findItem(R.id.action_show_allcoins).setChecked(true);
                 optionsMenu.findItem(R.id.action_show_stablecoins).setChecked(false);
                 optionsMenu.findItem(R.id.action_show_not_stablecoins).setChecked(false);
+                optionsMenu.findItem(R.id.action_show_favorite_coins).setChecked(false);
                 adapter.setCoinVisibility(CoinVisibility.ALL);
                 break;
             case "STABLECOINS":
                 optionsMenu.findItem(R.id.action_show_allcoins).setChecked(false);
                 optionsMenu.findItem(R.id.action_show_stablecoins).setChecked(true);
                 optionsMenu.findItem(R.id.action_show_not_stablecoins).setChecked(false);
+                optionsMenu.findItem(R.id.action_show_favorite_coins).setChecked(false);
                 adapter.setCoinVisibility(CoinVisibility.STABLECOINS);
                 break;
             case "NO_STABLECOINS":
                 optionsMenu.findItem(R.id.action_show_allcoins).setChecked(false);
                 optionsMenu.findItem(R.id.action_show_stablecoins).setChecked(false);
                 optionsMenu.findItem(R.id.action_show_not_stablecoins).setChecked(true);
+                optionsMenu.findItem(R.id.action_show_favorite_coins).setChecked(false);
                 adapter.setCoinVisibility(CoinVisibility.NO_STABLECOINS);
+                break;
+            case "FAVORITES":
+                optionsMenu.findItem(R.id.action_show_allcoins).setChecked(false);
+                optionsMenu.findItem(R.id.action_show_stablecoins).setChecked(false);
+                optionsMenu.findItem(R.id.action_show_not_stablecoins).setChecked(false);
+                optionsMenu.findItem(R.id.action_show_favorite_coins).setChecked(true);
+                adapter.setCoinVisibility(CoinVisibility.FAVORITES);
                 break;
         }
 

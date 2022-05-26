@@ -2,6 +2,7 @@ package com.gxdcd.cryptop;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,8 @@ class CoinRecyclerAdapter
     // Обновление данных визуального списка.
     // Вызывается после получения данных от сервера
     public void CmcProviderError() {
-        items.clear();
+        // полностью заменяем объект пустым
+        items = new ArrayList<>();
         notifyDataSetChanged();
     }
 
@@ -128,7 +130,45 @@ class CoinRecyclerAdapter
     }
 
     private CmcMeta getMeta(CmcItem item) {
-        return CmcProvider.Metadata.data.get(item.id);
+        try {
+            // ошибку не удается воспроизвести
+            // защищаемся от данной ошибки перехватом исключения
+            //
+            // переменная data может быть не
+            // проинициализирована к моменту входа в этот блок
+            // в этом случае возможен вылет с ошибкой NullPointerException
+            //
+            // возможные причины:
+            // в случае если метаданные
+            // * не подгрузились через CmcMetadataTask
+            // * содержат ошибку metadata.hasError()
+            //  - в обоих случаях не должен вызываться код заполнения
+            //    списка adapter.UpdateFromCmcProvider() в MainActivity.start
+            // * в ответе сервера не было данных в поле data json-объекта или он отсутствовал
+            //  - в это случае ошибка может быть не установлена
+            //    соответсвенно код заполнения списка adapter.UpdateFromCmcProvider();
+            //    может быть вызван - для того чтоб поймать ошибку поставили
+            //    assert (obj.data != null) в CmcMetadata FromJson
+            //
+            // не документировано: возможно, что при частом перезапуске, сервер
+            // последующие запросы ставит в очередь обработки с определенной задеркой
+            // которая не позволяет достаточно быстро получить ответ или
+            // возврящает пустой массив data - нужно дополнительно проверять
+            //
+            return CmcProvider.Metadata.data.get(item.id);
+        } catch (NullPointerException e) {
+            // записываем ошибку в лог
+            Log.e(CoinRecyclerAdapter.class.getSimpleName(),
+                    "Ошибка NullPointerException в CoinRecyclerAdapter.getMeta (CmcProvider.Metadata.data)");
+            e.printStackTrace();
+            // при возникновении исключения NullPointerException
+            // в случае если переменные не успели инициализироваться
+            // возвращаем null - необходимо проверить результат в месте использования
+            // в функциях:
+            //  onBindViewHolder класса CoinRecyclerAdapter и
+            //  onCreate класса CoinPageActivity
+            return null;
+        }
     }
 
     // Создаем вспомогательный класс ViewHolder
@@ -156,15 +196,15 @@ class CoinRecyclerAdapter
         // запоминаем id для восстановления
         holder.id = item.id;
 
-        if (getIsFavorite(item.id)){
+        if (getIsFavorite(item.id)) {
             holder.fav.setImageResource(R.drawable.btn_star_big_on);
         } else {
             holder.fav.setImageResource(R.drawable.btn_star_big_off);
         }
 
-        holder.fav.setOnClickListener(new View.OnClickListener(){
+        holder.fav.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (getIsFavorite(item.id)){
+                if (getIsFavorite(item.id)) {
                     setFavorite(item.id, false);
                     holder.fav.setImageResource(R.drawable.btn_star_big_off);
                 } else {
@@ -176,11 +216,12 @@ class CoinRecyclerAdapter
             }
         });
 
-        Glide.with(context)
-                .load(meta.logo)
-                .override(64, 64)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.logo);
+        if (meta != null)
+            Glide.with(context)
+                    .load(meta.logo)
+                    .override(64, 64)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(holder.logo);
 
         holder.name.setText(String.format("%d %s (%s) %s", item.cmc_rank, item.name, item.symbol, item.isStablecoin() ? "стейблкойн" : ""));
         holder.price.setText(String.format("Цена: %,f %s", quote.price, item.getQuoteSymbol()));
@@ -200,13 +241,13 @@ class CoinRecyclerAdapter
         return sharedPreferences.getBoolean("favorite-" + id, false);
     }
 
-    void setFavorite(Integer id, boolean value){
-        if (getIsFavorite(id)){
-            if (!value){
+    void setFavorite(Integer id, boolean value) {
+        if (getIsFavorite(id)) {
+            if (!value) {
                 sharedPreferences.edit().putBoolean("favorite-" + id, false).apply();
             }
         } else {
-            if (value){
+            if (value) {
                 sharedPreferences.edit().putBoolean("favorite-" + id, true).apply();
             }
         }

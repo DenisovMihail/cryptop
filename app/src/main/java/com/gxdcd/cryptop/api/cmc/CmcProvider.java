@@ -81,7 +81,7 @@ public class CmcProvider {
                         // После получения ответа сервера, содержащего дополнительные данные
                         // вызывается код с параметром (CmcMetadata metadata), в котором данные
                         // от обоих запросов объединяются и отправляются для дальнейшей
-                        // обработки в методе CmcLoadingComplete finished
+                        // обработки в методе CmcLoadingComplete complete
                         CmcMetadataTask.Start(apiKey, latest,
                                 (CmcMetadata metadata) -> {
                                     Metadata = metadata;

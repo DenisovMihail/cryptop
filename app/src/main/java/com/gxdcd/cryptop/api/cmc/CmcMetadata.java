@@ -38,8 +38,13 @@ public class CmcMetadata {
             CmcMetadata obj = gson.fromJson(json, CmcMetadata.class);
             // Если ошибка уже присутствует в json-объекте,
             // передаем ее в новый объект котрый собственно и возвращаем
-            if (obj.hasError())
+            if (obj.hasError()) {
+                // для debug режима проверяем что data не null
+                // в связи с тем что это может являться ошибкой
+                // вылетающей в CoinRecyclerAdapter.getMeta
+                assert (obj.data != null);
                 return FromError(obj.status.error_message);
+            }
             // Всё ок - возвращаем воссозданный объект
             return obj;
         } catch (JsonParseException e) {

@@ -92,11 +92,12 @@ public class CoinPageActivity extends AppCompatActivity {
         CmcQuote quote = item.getQuote();
 
         ImageView logo = findViewById(R.id.logo);
-        Glide.with(this.getApplicationContext())
-                .load(meta.logo)
-                .override(64, 64)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(logo);
+        if (meta != null)
+            Glide.with(this.getApplicationContext())
+                    .load(meta.logo)
+                    .override(64, 64)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(logo);
 
         setText(R.id.name, item.name + " (" + item.symbol + ")");
         setText(R.id.price, "Цена: %,f %s", quote.price, item.getQuoteSymbol());
