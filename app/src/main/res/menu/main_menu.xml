@@ -1,9 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto">
-<item android:id="@+id/action_search"
-    android:title="@string/action_search"
-    app:actionViewClass="androidx.appcompat.widget.SearchView"
-    app:showAsAction="always"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_search"
+        android:title="@string/action_search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
@@ -19,13 +20,19 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:checkable="true"
         android:id="@+id/action_show_stablecoins"
-        android:orderInCategory="101"
+        android:orderInCategory="102"
         android:title="@string/action_show_stablecoins"
         app:showAsAction="never" />
     <item
         android:checkable="true"
         android:id="@+id/action_show_not_stablecoins"
-        android:orderInCategory="101"
+        android:orderInCategory="103"
         android:title="@string/action_show_not_stablecoins"
+        app:showAsAction="never" />
+    <item
+        android:checkable="true"
+        android:id="@+id/action_show_favorite_coins"
+        android:orderInCategory="104"
+        android:title="@string/action_show_favorite_coins"
         app:showAsAction="never" />
 </menu>
